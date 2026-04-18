@@ -11,3 +11,10 @@ members = [
     "packages/typeforms-domain-dataaccess",
     "packages/typeforms-domain",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "ruff>=0.15.11",
+    "ty>=0.0.31",
+]
