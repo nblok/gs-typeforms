@@ -1,0 +1,43 @@
+version = 1
+revision = 3
+requires-python = ">=3.14"
+
+[manifest]
+members = [
+    "api",
+    "common",
+    "rest-api",
+    "typeforms-domain-application-service",
+    "typeforms-domain-core",
+    "typeforms-domain-dataaccess",
+]
+
+[[package]]
+name = "api"
+version = "0.1.0"
+source = { virtual = "." }
+
+[[package]]
+name = "common"
+version = "0.1.0"
+source = { editable = "packages/common" }
+
+[[package]]
+name = "rest-api"
+version = "0.1.0"
+source = { editable = "apps/rest-api" }
+
+[[package]]
+name = "typeforms-domain-application-service"
+version = "0.1.0"
+source = { editable = "packages/typeforms-domain-application-service" }
+
+[[package]]
+name = "typeforms-domain-core"
+version = "0.1.0"
+source = { editable = "packages/typeforms-domain-core" }
+
+[[package]]
+name = "typeforms-domain-dataaccess"
+version = "0.1.0"
+source = { editable = "packages/typeforms-domain-dataaccess" }
