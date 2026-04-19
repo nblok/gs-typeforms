@@ -8,7 +8,7 @@ dependencies = []
 members = [
     "apps/rest-api",
     "packages/common",
-    "packages/typeforms-domain-dataaccess",
+    "packages/typeforms-dataaccess",
     "packages/typeforms-domain",
 ]
 

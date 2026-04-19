@@ -12,6 +12,8 @@ dependencies = [
     "fastapi[standard]>=0.136.0",
     "pydantic>=2.13.2",
     "typeforms-domain",
+    "typeforms-dataaccess",
+    "rich>=15.0.0",
 ]
 
 [project.scripts]
@@ -23,3 +25,4 @@ build-backend = "uv_build"
 
 [tool.uv.sources]
 typeforms-domain = { workspace = true }
+typeforms-dataaccess = { workspace = true }
