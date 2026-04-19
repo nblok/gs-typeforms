@@ -1,3 +1,7 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
 class ValueObject:
     def __eq__(self, other: object) -> bool:
         if type(self) is not type(other):
