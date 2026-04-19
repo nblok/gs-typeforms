@@ -1,11 +1,11 @@
-from typing import Generic, TypeVar
+import typing as t
 
 from common.domain.valueobject.value_object import ValueObject
 
-T = TypeVar("T")
+T = t.TypeVar("T")
 
 
-class BaseId(ValueObject, Generic[T]):
+class BaseId(ValueObject, t.Generic[T]):
     def __init__(self, value: T) -> None:
         self._value = value
 
@@ -13,6 +13,7 @@ class BaseId(ValueObject, Generic[T]):
     def value(self) -> T:
         return self._value
 
+    @t.override
     def __eq__(self, other: object) -> bool:
         if type(self) is not type(other):
             return False

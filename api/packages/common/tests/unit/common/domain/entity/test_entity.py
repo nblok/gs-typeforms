@@ -1,5 +1,3 @@
-import pytest
-
 from common.domain.entity.base_entity import Entity
 from common.domain.entity.aggregate_root import AggregateRoot
 

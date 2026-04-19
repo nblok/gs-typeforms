@@ -1,9 +1,9 @@
-from typing import Generic, TypeVar
+import typing as t
 
-TId = TypeVar("TId")
+TId = t.TypeVar("TId")
 
 
-class Entity(Generic[TId]):
+class Entity(t.Generic[TId]):
     def __init__(self, id: TId) -> None:
         self._id = id
 
@@ -14,7 +14,9 @@ class Entity(Generic[TId]):
     def __eq__(self, other: object) -> bool:
         if type(self) is not type(other):
             return False
-        # assert isinstance(other, Entity)
+        # TODO: remove assert? I would think that throwing exception
+        #       may make more sense in production code
+        assert isinstance(other, Entity)
         return self._id == other._id
 
     def __hash__(self) -> int:
