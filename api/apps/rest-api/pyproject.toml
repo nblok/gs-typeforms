@@ -7,7 +7,9 @@ authors = [
     { name = "Nathan Blok", email = "ndblok@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "fastapi[standard]>=0.136.0",
+]
 
 [project.scripts]
 rest-api = "rest_api:main"
