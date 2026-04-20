@@ -33,6 +33,7 @@ def create_database(database_url: str, force_rollback: bool = False):
         sqlalchemy.Column('field_type', sqlalchemy.String, nullable=False),
         sqlalchemy.Column('order', sqlalchemy.Integer, nullable=False),
         sqlalchemy.Column('required', sqlalchemy.Boolean, nullable=False),
+        sqlalchemy.Column('config', sqlalchemy.Text, nullable=False),
     )
 
     sync_url = database_url.replace("sqlite+aiosqlite", "sqlite")

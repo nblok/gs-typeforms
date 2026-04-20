@@ -23,11 +23,11 @@ class Form(AggregateRoot[FormId]):
         self.modified_at = modified_at
 
     @classmethod
-    def create(cls, title: str, fields: list[dict] | None = None) -> "Form":
+    def create(cls, title: str, fields: list[Field] | None = None) -> "Form":
         return cls(
             form_id=FormId(value=uuid.uuid4()),
             title=title,
-            fields=[Field.create(**field) for field in (fields or [])],
+            fields=fields or [],
         )
 
     @classmethod

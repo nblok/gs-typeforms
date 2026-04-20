@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
 import type { FieldDefinition, FieldType } from '../../types/fieldDefinition';
 import { useFieldDefinitions } from '../../api/useFieldDefinitions';
+import { useSaveForm } from '../../api/useSaveForm';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { BuilderTopBar } from './BuilderTopBar';
 import { FieldPalette } from './FieldPalette';
@@ -47,12 +48,18 @@ function buildField(
 export default function FormBuilderPage() {
   const navigate = useNavigate();
   const { data: fieldDefinitions, isPending, error } = useFieldDefinitions();
+  const saveForm = useSaveForm();
   const [formTitle, setFormTitle] = useState('Untitled form');
   const [fields, setFields] = useState<FormField[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const handleCancel = () => navigate('/');
-  const handlePublish = () => navigate('/');
+  const handlePublish = () => {
+    saveForm.mutate(
+      { title: formTitle, fields },
+      { onSuccess: () => navigate('/') },
+    );
+  };
 
   if (isPending) {
     return (
@@ -102,7 +109,9 @@ export default function FormBuilderPage() {
         onFormTitleChange={setFormTitle}
         onCancel={handleCancel}
         onPublish={handlePublish}
+        publishing={saveForm.isPending}
       />
+      {saveForm.error && <ErrorAlert error={saveForm.error as Error} />}
       <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <FieldPalette
           fieldDefinitions={fieldDefinitions}

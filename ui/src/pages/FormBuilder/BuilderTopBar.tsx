@@ -5,6 +5,7 @@ interface Props {
   onFormTitleChange: (title: string) => void;
   onCancel: () => void;
   onPublish: () => void;
+  publishing?: boolean;
 }
 
 export function BuilderTopBar({
@@ -12,6 +13,7 @@ export function BuilderTopBar({
   onFormTitleChange,
   onCancel,
   onPublish,
+  publishing = false,
 }: Props) {
   return (
     <Box
@@ -41,11 +43,21 @@ export function BuilderTopBar({
       />
       <Box sx={{ flex: 1 }} />
       <Stack direction="row" spacing={1}>
-        <Button onClick={onCancel} variant="outlined" size="small">
+        <Button
+          onClick={onCancel}
+          variant="outlined"
+          size="small"
+          disabled={publishing}
+        >
           Cancel
         </Button>
-        <Button onClick={onPublish} variant="contained" size="small">
-          Publish
+        <Button
+          onClick={onPublish}
+          variant="contained"
+          size="small"
+          disabled={publishing}
+        >
+          {publishing ? 'Publishing…' : 'Publish'}
         </Button>
       </Stack>
     </Box>

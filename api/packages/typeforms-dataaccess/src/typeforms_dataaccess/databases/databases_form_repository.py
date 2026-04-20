@@ -1,13 +1,20 @@
 import json
 
 from databases import Database
+from typeforms_domain.application_service.ports.output.repository.form_repository import (
+    FormRepository,
+)
 from typeforms_domain.core.entity.form import Form
 from typeforms_domain.core.valueobject.form_id import FormId
-from typeforms_domain.application_service.ports.output.repository.form_repository import FormRepository
 
-GET_QUERY_SQL = """
-SELECT id AS form_id, title, fields, created_at, modified_at 
+GET_FORM_SQL = """
+SELECT id, title, created_at, modified_at
 FROM form WHERE id = :id
+"""
+
+GET_FIELDS_SQL = """
+SELECT id, form_id, label, field_type, "order", required, config
+FROM field WHERE form_id = :form_id ORDER BY "order"
 """
 
 SAVE_INSERT_FORM_SQL = """
@@ -18,13 +25,14 @@ title = EXCLUDED.title, modified_at = CURRENT_TIMESTAMP
 """
 
 SAVE_INSERT_FIELD_SQL = """
-INSERT INTO field (id, form_id, label, field_type, "order", required)
-VALUES (:id, :form_id, :label, :field_type, :order, :required)
+INSERT INTO field (id, form_id, label, field_type, "order", required, config)
+VALUES (:id, :form_id, :label, :field_type, :order, :required, :config)
     ON CONFLICT (id) DO UPDATE SET
     label = EXCLUDED.label,
     field_type = EXCLUDED.field_type,
     "order" = EXCLUDED."order",
-    required = EXCLUDED.required
+    required = EXCLUDED.required,
+    config = EXCLUDED.config
 """
 
 
@@ -33,21 +41,36 @@ class DatabasesFormRepository(FormRepository):
         self._db = db
 
     async def get(self, form_id: FormId) -> Form | None:
-        row = await self._db.fetch_one(
-            GET_QUERY_SQL, {"id": form_id.value},
-        )
-        if row is None:
+        form_row = await self._db.fetch_one(GET_FORM_SQL, {"id": str(form_id.value)})
+        if form_row is None:
             return None
-        data = dict(row)
-        if isinstance(data["fields"], str):
-            data["fields"] = json.loads(data["fields"])
+        field_rows = await self._db.fetch_all(
+            GET_FIELDS_SQL, {"form_id": str(form_id.value)}
+        )
+        data = {
+            "form_id": str(form_row["id"]),
+            "title": form_row["title"],
+            "created_at": form_row["created_at"],
+            "modified_at": form_row["modified_at"],
+            "fields": [
+                {
+                    "field_id": str(row["id"]),
+                    "label": row["label"],
+                    "field_type": row["field_type"],
+                    "order": row["order"],
+                    "required": bool(row["required"]),
+                    "config": json.loads(row["config"]),
+                }
+                for row in field_rows
+            ],
+        }
         return Form.from_dict(data)
 
     async def save(self, form: Form) -> FormId:
         await self._db.execute(
             SAVE_INSERT_FORM_SQL,
             {
-                "id": form.id.value,
+                "id": str(form.id.value),
                 "title": form.title,
             },
         )
@@ -63,6 +86,7 @@ class DatabasesFormRepository(FormRepository):
                         "field_type": field.field_type.value,
                         "order": field.order,
                         "required": field.required,
+                        "config": json.dumps(field.to_dict()["config"]),
                     }
                     for field in form.fields
                 ],
