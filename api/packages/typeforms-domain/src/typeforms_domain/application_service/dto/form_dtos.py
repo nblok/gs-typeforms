@@ -36,3 +36,9 @@ class FormResponseDto(BaseModel):
     fields: list[FieldResponseDto]
     created_at: datetime.datetime | None
     modified_at: datetime.datetime | None
+
+
+class FormSummaryDto(BaseModel):
+    id: str
+    title: str
+    created_at: datetime.datetime | None

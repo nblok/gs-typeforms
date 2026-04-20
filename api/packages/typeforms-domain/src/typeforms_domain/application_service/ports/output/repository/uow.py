@@ -1,7 +1,9 @@
 import typing as t
 from abc import ABC, abstractmethod
 
-from typeforms_domain.application_service.ports.output.repository.form_repository import FormRepository
+from typeforms_domain.application_service.ports.output.repository.form_repository import (
+    FormRepository,
+)
 
 
 class AbstractUnitOfWork(ABC):

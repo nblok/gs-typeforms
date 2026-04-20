@@ -5,7 +5,7 @@ import {
   type FieldConfigResponse,
 } from './fieldConfigMappers';
 import type { FieldType } from '../types/fieldDefinition';
-import type { CreateFormPayload, Form } from '../types/form';
+import type { CreateFormPayload, Form, FormSummary } from '../types/form';
 import type { FormField } from '../pages/FormBuilder/formField';
 
 interface FormFieldRequest {
@@ -23,6 +23,20 @@ interface CreateFormRequest {
 
 interface CreateFormResponse {
   id: string;
+}
+
+interface FormSummaryResponse {
+  id: string;
+  title: string;
+  created_at: string | null;
+}
+
+function toFormSummary(response: FormSummaryResponse): FormSummary {
+  return {
+    id: response.id,
+    title: response.title,
+    createdAt: response.created_at,
+  };
 }
 
 interface FormFieldResponse {
@@ -72,6 +86,11 @@ function toForm(response: FormResponse): Form {
     createdAt: response.created_at,
     modifiedAt: response.modified_at,
   };
+}
+
+export async function getForms(): Promise<FormSummary[]> {
+  const response = await apiClient.get<FormSummaryResponse[]>('/forms/');
+  return response.data.map(toFormSummary);
 }
 
 export async function saveForm(payload: CreateFormPayload): Promise<{ id: string }> {

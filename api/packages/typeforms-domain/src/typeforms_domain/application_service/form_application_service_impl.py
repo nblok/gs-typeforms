@@ -15,6 +15,7 @@ from typeforms_domain.application_service.dto.form_dtos import (
     CreateFormField,
     FieldResponseDto,
     FormResponseDto,
+    FormSummaryDto,
 )
 from typeforms_domain.application_service.ports.input.service.form_application_serivce import (
     FormApplicationService,
@@ -107,3 +108,12 @@ class FormApplicationServiceImpl(FormApplicationService):
         if form is None:
             return None
         return _form_to_response_dto(form)
+
+    async def list_forms(self) -> list[FormSummaryDto]:
+        logger.info("Listing all forms")
+        async with self._uow:
+            forms = await self._uow.forms.find_all()
+        return [
+            FormSummaryDto(id=str(f.id.value), title=f.title, created_at=f.created_at)
+            for f in forms
+        ]

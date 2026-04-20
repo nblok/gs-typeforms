@@ -11,11 +11,15 @@ from rest_api.container import Container
 def create_app() -> FastAPI:
     di_container = Container()
     di_container.config.database_url.from_env("DATABASE_URL")
-    di_container.config.database_force_rollback.from_env("DATABASE_FORCE_ROLLBACK", default=False)
-    di_container.wire(modules=[
-        "rest_api.routers.field_definition_routes",
-        "rest_api.routers.form_routes",
-    ])
+    di_container.config.database_force_rollback.from_env(
+        "DATABASE_FORCE_ROLLBACK", default=False
+    )
+    di_container.wire(
+        modules=[
+            "rest_api.routers.field_definition_routes",
+            "rest_api.routers.form_routes",
+        ]
+    )
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):

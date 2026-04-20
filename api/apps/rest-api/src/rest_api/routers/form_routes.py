@@ -9,6 +9,7 @@ from rest_api.container import Container
 from typeforms_domain.application_service.dto.form_dtos import (
     CreateFormCommand,
     FormResponseDto,
+    FormSummaryDto,
 )
 from typeforms_domain.application_service.ports.input.service.form_application_serivce import (
     FormApplicationService,
@@ -21,6 +22,17 @@ router = APIRouter(
 )
 
 logger = logging.getLogger(__name__)
+
+
+@router.get("/", response_model=list[FormSummaryDto])
+@inject
+async def list_forms(
+    form_application_service: t.Annotated[
+        FormApplicationService,
+        Depends(Provide[Container.form_application_service]),
+    ],
+):
+    return await form_application_service.list_forms()
 
 
 @router.post("/")

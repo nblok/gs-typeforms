@@ -7,7 +7,6 @@ from typeforms_domain.core.valueobject.form_id import FormId
 
 
 class Form(AggregateRoot[FormId]):
-
     def __init__(
         self,
         form_id: FormId,

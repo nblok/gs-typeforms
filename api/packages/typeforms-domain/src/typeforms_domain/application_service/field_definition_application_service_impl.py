@@ -41,9 +41,11 @@ class FieldDefinitionApplicationServiceImpl(FieldDefinitionApplicationService):
     ) -> t.Optional[FieldDefinitionResponseDto]:
         logger.info(f"Getting field definition by type: {field_type.value}")
         result = None
-        if (field_definition := self._field_definition_domain_service.get_field_definition_by_type(
-            field_type
-        )):
+        if (
+            field_definition
+            := self._field_definition_domain_service.get_field_definition_by_type(
+                field_type
+            )
+        ):
             result = self._to_response_dto(field_definition)
         return result
-

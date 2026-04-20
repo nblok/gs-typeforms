@@ -12,10 +12,24 @@ SELECT id, title, created_at, modified_at
 FROM form WHERE id = :id
 """
 
+GET_ALL_FORMS_SQL = """
+                    SELECT id, title, created_at, modified_at
+                    FROM form
+                    ORDER BY created_at DESC \
+                    """
+
 GET_FIELDS_SQL = """
-SELECT id, form_id, label, field_type, "order", required, config
-FROM field WHERE form_id = :form_id ORDER BY "order"
-"""
+                 SELECT id, form_id, label, field_type, "order", required, config
+                 FROM field
+                 WHERE form_id = :form_id
+                 ORDER BY "order" \
+                 """
+
+GET_ALL_FIELDS_SQL = """
+                     SELECT id, form_id, label, field_type, "order", required, config
+                     FROM field
+                     ORDER BY form_id, "order" \
+                     """
 
 SAVE_INSERT_FORM_SQL = """
 INSERT INTO form (id, title)
@@ -65,6 +79,44 @@ class DatabasesFormRepository(FormRepository):
             ],
         }
         return Form.from_dict(data)
+
+    async def find_all(self) -> list[Form]:
+        form_rows = await self._db.fetch_all(GET_ALL_FORMS_SQL)
+        if not form_rows:
+            return []
+
+        field_rows = await self._db.fetch_all(GET_ALL_FIELDS_SQL)
+
+        # Group fields by form_id
+        fields_by_form_id = {}
+        for row in field_rows:
+            form_id = str(row["form_id"])
+            if form_id not in fields_by_form_id:
+                fields_by_form_id[form_id] = []
+            fields_by_form_id[form_id].append(
+                {
+                    "field_id": str(row["id"]),
+                    "label": row["label"],
+                    "field_type": row["field_type"],
+                    "order": row["order"],
+                    "required": bool(row["required"]),
+                    "config": json.loads(row["config"]),
+                }
+            )
+
+        forms = []
+        for form_row in form_rows:
+            form_id = str(form_row["id"])
+            data = {
+                "form_id": form_id,
+                "title": form_row["title"],
+                "created_at": form_row["created_at"],
+                "modified_at": form_row["modified_at"],
+                "fields": fields_by_form_id.get(form_id, []),
+            }
+            forms.append(Form.from_dict(data))
+
+        return forms
 
     async def save(self, form: Form) -> FormId:
         await self._db.execute(

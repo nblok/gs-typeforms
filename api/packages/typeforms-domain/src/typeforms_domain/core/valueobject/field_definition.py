@@ -87,9 +87,7 @@ class MultipleChoiceConfig(FieldConfig):
             if not isinstance(answer, str):
                 raise FieldConfigValidationError("Answer must be a string")
             if answer not in self.options:
-                raise FieldConfigValidationError(
-                    f"'{answer}' is not a valid option"
-                )
+                raise FieldConfigValidationError(f"'{answer}' is not a valid option")
 
 
 @dataclass(frozen=True)
