@@ -32,6 +32,11 @@ Dev tooling (ruff, pytest, ty) is declared in the root `api/pyproject.toml` dev 
 
 Standard Vite + React 19 scaffold with TypeScript. Currently a default Vite starter — no routing, state management, or API integration yet.
 
+## Coding Standards
+
+- **API (backend):** [`docs/api.md`](docs/api.md) — architecture, DDD patterns, naming conventions, DI, logging, and testing standards for the `api/` workspace.
+- **UI (frontend):** [`docs/ui.md`](docs/ui.md) — component conventions, routing, data fetching, date formatting, naming conventions, and testing standards for the `ui/` application.
+
 ## Commands
 
 ### Backend (run from `api/`)
