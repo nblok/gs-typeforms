@@ -1,6 +1,7 @@
 import uvicorn
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from rest_api.logging_config import configure_logging
 from rest_api.routers.field_definition_routes import router as field_definition_router
 from rest_api.routers.form_routes import router as form_router
@@ -24,6 +25,13 @@ def create_app() -> FastAPI:
         await di_container.db().disconnect()
 
     app = FastAPI(lifespan=lifespan)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     app.include_router(field_definition_router)
     app.include_router(form_router)
 

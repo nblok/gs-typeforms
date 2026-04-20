@@ -2,5 +2,3 @@
 .claude/settings.local.json
 .claude/memory/
 .claude/worktrees/
-*.sqlite
-*.log
