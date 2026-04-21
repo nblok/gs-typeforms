@@ -11,10 +11,6 @@ from rest_api.container import Container
 
 def create_app() -> FastAPI:
     di_container = Container()
-    di_container.config.database_url.from_env("DATABASE_URL")
-    di_container.config.database_force_rollback.from_env(
-        "DATABASE_FORCE_ROLLBACK", default=False
-    )
     di_container.wire(
         modules=[
             "rest_api.routers.field_definition_routes",
@@ -25,7 +21,7 @@ def create_app() -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
-        configure_logging()
+        configure_logging(di_container.settings().LOG_FILE)
         await di_container.db().connect()
         yield
         await di_container.db().disconnect()
@@ -44,10 +40,16 @@ def create_app() -> FastAPI:
 
     @app.get("/")
     async def root():
-        return {"message": "Welcome to Typeforms API!"}
+        return {"message": "Welcome to Typeforms API!!!"}
 
     return app
 
 
 def main() -> None:
-    uvicorn.run(create_app(), host="0.0.0.0", port=8000)
+    uvicorn.run(
+        "rest_api:create_app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        factory=True
+    )

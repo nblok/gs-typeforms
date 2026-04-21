@@ -14,14 +14,15 @@ from typeforms_domain.core.service.field_definition_domain_service import (
 from typeforms_domain.application_service.field_definition_application_service_impl import (
     FieldDefinitionApplicationServiceImpl,
 )
+from rest_api.config import BaseConfig, get_config
 
 
 class Container(containers.DeclarativeContainer):
-    config = providers.Configuration()
-
+    settings = providers.Singleton(get_config, BaseConfig().ENV_STATE or "dev")
     db = providers.Singleton(
         create_database,
-        config.database_url,
+        database_url=settings.provided.DATABASE_URL,
+        force_rollback=settings.provided.DATABASE_FORCE_ROLLBACK,
     )
 
     unit_of_work = providers.Factory(DatabasesUnitOfWork, db=db)

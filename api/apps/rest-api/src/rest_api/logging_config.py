@@ -1,7 +1,7 @@
 from logging.config import dictConfig
 
 
-def configure_logging():
+def configure_logging(log_file: str):
     dictConfig(
         {
             "version": 1,
@@ -28,7 +28,7 @@ def configure_logging():
                     "class": "logging.handlers.RotatingFileHandler",
                     "level": "DEBUG",
                     "formatter": "file",
-                    "filename": "typeforms-api.log",
+                    "filename": log_file,
                     "maxBytes": 1024 * 1024 * 5,  # 5 MB
                     "backupCount": 5,
                     "encoding": "utf-8",

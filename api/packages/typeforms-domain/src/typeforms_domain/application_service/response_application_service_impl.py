@@ -78,9 +78,7 @@ class ResponseApplicationServiceImpl(ResponseApplicationService):
                 response = existing
 
             await self._uow.responses.save(response)
-            saved = await self._uow.responses.get_by_respondent(
-                form_id, respondent_id
-            )
+            saved = await self._uow.responses.get_by_respondent(form_id, respondent_id)
         assert saved is not None
         return _response_to_dto(saved)
 
@@ -119,7 +117,5 @@ class ResponseApplicationServiceImpl(ResponseApplicationService):
         for field_id, answer in answers.items():
             field = fields_by_id.get(field_id)
             if field is None:
-                raise FieldConfigValidationError(
-                    f"Unknown field id: {field_id}"
-                )
+                raise FieldConfigValidationError(f"Unknown field id: {field_id}")
             field.config.validate(answer)

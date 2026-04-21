@@ -14,6 +14,7 @@ dependencies = [
     "typeforms-domain",
     "typeforms-dataaccess",
     "rich>=15.0.0",
+    "pydantic-settings>=2.13.1",
 ]
 
 [project.scripts]
