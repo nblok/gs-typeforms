@@ -22,3 +22,9 @@ class ResponseApplicationService(t.Protocol):
         respondent_id: RespondentId,
     ) -> ResponseDto | None:
         pass
+
+    async def list_responses_for_form(
+        self,
+        form_id: FormId,
+    ) -> list[ResponseDto]:
+        pass

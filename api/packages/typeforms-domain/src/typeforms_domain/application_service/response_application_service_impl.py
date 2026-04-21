@@ -84,6 +84,18 @@ class ResponseApplicationServiceImpl(ResponseApplicationService):
         assert saved is not None
         return _response_to_dto(saved)
 
+    async def list_responses_for_form(
+        self,
+        form_id: FormId,
+    ) -> list[ResponseDto]:
+        logger.info(f"Listing responses for form {form_id.value}")
+        async with self._uow:
+            form = await self._uow.forms.get(form_id)
+            if form is None:
+                raise FormNotFoundError(f"Form {form_id.value} not found")
+            responses = await self._uow.responses.list_by_form(form_id)
+        return [_response_to_dto(r) for r in responses]
+
     async def get_response_by_respondent(
         self,
         form_id: FormId,

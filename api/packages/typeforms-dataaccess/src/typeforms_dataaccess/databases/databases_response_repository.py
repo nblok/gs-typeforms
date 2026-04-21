@@ -15,6 +15,13 @@ FROM response
 WHERE form_id = :form_id AND respondent_id = :respondent_id
 """
 
+LIST_BY_FORM_SQL = """
+SELECT id, form_id, respondent_id, answers, submitted_at, modified_at
+FROM response
+WHERE form_id = :form_id
+ORDER BY submitted_at
+"""
+
 SAVE_UPSERT_SQL = """
 INSERT INTO response (id, form_id, respondent_id, answers)
 VALUES (:id, :form_id, :respondent_id, :answers)
@@ -52,6 +59,25 @@ class DatabasesResponseRepository(ResponseRepository):
                 "modified_at": row["modified_at"],
             }
         )
+
+    async def list_by_form(self, form_id: FormId) -> list[Response]:
+        rows = await self._db.fetch_all(
+            LIST_BY_FORM_SQL,
+            {"form_id": str(form_id.value)},
+        )
+        return [
+            Response.from_dict(
+                {
+                    "response_id": str(row["id"]),
+                    "form_id": str(row["form_id"]),
+                    "respondent_id": str(row["respondent_id"]),
+                    "answers": json.loads(row["answers"]),
+                    "submitted_at": row["submitted_at"],
+                    "modified_at": row["modified_at"],
+                }
+            )
+            for row in rows
+        ]
 
     async def save(self, response: Response) -> ResponseId:
         await self._db.execute(

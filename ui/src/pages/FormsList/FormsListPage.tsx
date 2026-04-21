@@ -73,7 +73,12 @@ export default function FormsListPage() {
                         >
                           Participate
                         </Button>
-                        <Button variant="outlined" size="small">
+                        <Button
+                          component={RouterLink}
+                          to={`/forms/${form.id}/results`}
+                          variant="outlined"
+                          size="small"
+                        >
                           View Results
                         </Button>
                       </Box>

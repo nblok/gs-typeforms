@@ -83,6 +83,15 @@ export async function getResponseByRespondent(
   return response.data ? toFormResponse(response.data) : null;
 }
 
+export async function getResponsesForForm(
+  formId: string,
+): Promise<FormResponse[]> {
+  const response = await apiClient.get<FormResponseApi[]>(
+    `/forms/${formId}/responses`,
+  );
+  return response.data.map(toFormResponse);
+}
+
 export async function submitResponse(
   formId: string,
   payload: SubmitResponsePayload,

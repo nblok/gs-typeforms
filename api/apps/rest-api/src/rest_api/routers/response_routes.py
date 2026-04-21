@@ -30,6 +30,23 @@ router = APIRouter(
 logger = logging.getLogger(__name__)
 
 
+@router.get("", response_model=list[ResponseDto])
+@inject
+async def list_responses(
+    form_id: uuid.UUID,
+    response_application_service: t.Annotated[
+        ResponseApplicationService,
+        Depends(Provide[Container.response_application_service]),
+    ],
+):
+    try:
+        return await response_application_service.list_responses_for_form(
+            form_id=FormId(value=form_id),
+        )
+    except FormNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+
+
 @router.post("", response_model=ResponseDto)
 @inject
 async def submit_response(
