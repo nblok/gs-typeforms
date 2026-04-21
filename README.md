@@ -2,6 +2,88 @@
 A typeform like application
 
 ## Running application dev environment
+
+You can run the dev environment two ways:
+
+- **[Docker Compose](#running-with-docker-compose)** — one command, no local Python/Node setup required.
+- **[Local (uv + npm)](#python-api-application)** — run the API and UI directly on your machine.
+
+## Running with Docker Compose
+
+The easiest way to get both services up and running. Requires [Docker](https://docs.docker.com/get-docker/) (Desktop on Mac/Windows, Engine on Linux).
+
+### Start the dev environment
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+This uses `docker-compose.yml` + `docker-compose.override.yml` together, giving you:
+
+- UI at `http://localhost:5173` (Vite dev server with hot module replacement)
+- API at `http://localhost:8000` (uvicorn with `--reload`)
+- API interactive docs at `http://localhost:8000/docs`
+
+Source code is bind-mounted into both containers, so local edits trigger reloads automatically. SQLite data persists in a named Docker volume (`db_data`).
+
+To stop the services:
+
+```bash
+docker compose down           # stop containers
+docker compose down -v        # stop containers and delete the db volume
+```
+
+### Exec into a running container
+
+```bash
+# API (Debian-based)
+docker compose exec api bash
+
+# UI (Alpine-based — use sh, not bash)
+docker compose exec ui sh
+```
+
+If a container has crashed and you want a fresh one-off shell:
+
+```bash
+docker compose run --rm --entrypoint="" api bash
+```
+
+### Tailing logs
+
+View logs streamed from the containers (all services):
+
+```bash
+docker compose logs -f
+```
+
+Tail logs for a single service:
+
+```bash
+docker compose logs -f api
+docker compose logs -f ui
+```
+
+The API also writes rotating file logs inside the container at `/app/apps/rest-api/src/logs/typeforms-dev.log`. Since the `logs/` directory is not mounted to the host, tail it through Docker:
+
+```bash
+docker compose exec api tail -f apps/rest-api/src/logs/typeforms-dev.log
+```
+
+### Running in production mode
+
+The override file is only applied automatically — opt out of it to run the built (non-reload) production images:
+
+```bash
+docker compose -f docker-compose.yml up --build
+```
+
+In this mode the UI is served by nginx on `http://localhost` (port 80), and the API runs without reload.
+
+## Running locally (without Docker)
+
 ### Python API Application
 
 #### 1. Install uv

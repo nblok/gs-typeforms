@@ -1,0 +1,22 @@
+services:
+  api:
+    volumes:
+      - ./api/apps/rest-api/src/rest_api:/app/apps/rest-api/src/rest_api
+      - ./api/packages/common/src/common:/app/packages/common/src/common
+      - ./api/packages/typeforms-dataaccess/src/typeforms_dataaccess:/app/packages/typeforms-dataaccess/src/typeforms_dataaccess
+      - ./api/packages/typeforms-domain/src/typeforms_domain:/app/packages/typeforms-domain/src/typeforms_domain
+
+  ui:
+    build:
+      target: deps
+    command: npm run dev -- --host
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    volumes:
+      - ./ui:/app
+      - ui_node_modules:/app/node_modules
+
+volumes:
+  ui_node_modules:
