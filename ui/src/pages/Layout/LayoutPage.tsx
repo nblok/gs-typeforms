@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 import { RespondentBadge } from '../../components/RespondentBadge';
 
@@ -8,7 +8,9 @@ export default function LayoutPage() {
       <AppBar position="static">
         <Toolbar sx={{ gap: 2 }}>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            TypeForms
+            <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+              TypeForms
+            </Link>
           </Typography>
           <RespondentBadge />
         </Toolbar>
