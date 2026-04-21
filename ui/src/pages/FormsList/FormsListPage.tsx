@@ -65,7 +65,12 @@ export default function FormsListPage() {
                             'column-gap': theme.spacing(1),
                           }}
                       >
-                        <Button variant="outlined" size="small">
+                        <Button
+                          component={RouterLink}
+                          to={`/forms/${form.id}/participate`}
+                          variant="outlined"
+                          size="small"
+                        >
                           Participate
                         </Button>
                         <Button variant="outlined" size="small">

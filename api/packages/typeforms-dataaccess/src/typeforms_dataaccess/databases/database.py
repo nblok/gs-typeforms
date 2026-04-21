@@ -42,6 +42,36 @@ def create_database(database_url: str, force_rollback: bool = False):
         sqlalchemy.Column("config", sqlalchemy.Text, nullable=False),
     )
 
+    _response_table = sqlalchemy.Table(
+        "response",
+        metadata,
+        sqlalchemy.Column("id", sqlalchemy.String, primary_key=True),
+        sqlalchemy.Column(
+            "form_id",
+            sqlalchemy.String,
+            sqlalchemy.ForeignKey("form.id"),
+            nullable=False,
+        ),
+        sqlalchemy.Column("respondent_id", sqlalchemy.String, nullable=False),
+        sqlalchemy.Column("answers", sqlalchemy.Text, nullable=False),
+        sqlalchemy.Column(
+            "submitted_at",
+            sqlalchemy.DateTime,
+            nullable=False,
+            server_default=sqlalchemy.func.now(),
+        ),
+        sqlalchemy.Column(
+            "modified_at",
+            sqlalchemy.DateTime,
+            nullable=False,
+            server_default=sqlalchemy.func.now(),
+            onupdate=sqlalchemy.func.now(),
+        ),
+        sqlalchemy.UniqueConstraint(
+            "form_id", "respondent_id", name="uq_response_form_respondent"
+        ),
+    )
+
     sync_url = database_url.replace("sqlite+aiosqlite", "sqlite")
     engine = sqlalchemy.create_engine(
         sync_url, connect_args={"check_same_thread": False}

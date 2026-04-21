@@ -6,6 +6,9 @@ from typeforms_domain.application_service.ports.output.repository.uow import (
 from typeforms_dataaccess.databases.databases_form_repository import (
     DatabasesFormRepository,
 )
+from typeforms_dataaccess.databases.databases_response_repository import (
+    DatabasesResponseRepository,
+)
 
 
 class DatabasesUnitOfWork(AbstractUnitOfWork):
@@ -13,6 +16,7 @@ class DatabasesUnitOfWork(AbstractUnitOfWork):
         self._db = db
         self._transaction = None
         self.forms = DatabasesFormRepository(db)
+        self.responses = DatabasesResponseRepository(db)
 
     async def __aenter__(self) -> t.Self:
         self._transaction = self._db.transaction()

@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from rest_api.logging_config import configure_logging
 from rest_api.routers.field_definition_routes import router as field_definition_router
 from rest_api.routers.form_routes import router as form_router
+from rest_api.routers.response_routes import router as response_router
 from rest_api.container import Container
 
 
@@ -18,6 +19,7 @@ def create_app() -> FastAPI:
         modules=[
             "rest_api.routers.field_definition_routes",
             "rest_api.routers.form_routes",
+            "rest_api.routers.response_routes",
         ]
     )
 
@@ -38,6 +40,7 @@ def create_app() -> FastAPI:
     )
     app.include_router(field_definition_router)
     app.include_router(form_router)
+    app.include_router(response_router)
 
     @app.get("/")
     async def root():

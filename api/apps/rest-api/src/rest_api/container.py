@@ -5,6 +5,9 @@ from typeforms_dataaccess.databases.databases_unit_of_work import DatabasesUnitO
 from typeforms_domain.application_service.form_application_service_impl import (
     FormApplicationServiceImpl,
 )
+from typeforms_domain.application_service.response_application_service_impl import (
+    ResponseApplicationServiceImpl,
+)
 from typeforms_domain.core.service.field_definition_domain_service import (
     FieldDefinitionDomainServiceImpl,
 )
@@ -34,5 +37,10 @@ class Container(containers.DeclarativeContainer):
 
     form_application_service = providers.Factory(
         FormApplicationServiceImpl,
+        uow=unit_of_work,
+    )
+
+    response_application_service = providers.Factory(
+        ResponseApplicationServiceImpl,
         uow=unit_of_work,
     )

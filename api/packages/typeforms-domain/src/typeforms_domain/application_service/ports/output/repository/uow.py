@@ -4,10 +4,14 @@ from abc import ABC, abstractmethod
 from typeforms_domain.application_service.ports.output.repository.form_repository import (
     FormRepository,
 )
+from typeforms_domain.application_service.ports.output.repository.response_repository import (
+    ResponseRepository,
+)
 
 
 class AbstractUnitOfWork(ABC):
     forms: FormRepository
+    responses: ResponseRepository
 
     async def __aenter__(self) -> t.Self:
         return self
