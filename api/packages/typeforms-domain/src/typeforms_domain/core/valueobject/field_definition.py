@@ -4,10 +4,9 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from common.domain.valueobject.value_object import ValueObject
-
-
-class FieldConfigValidationError(ValueError):
-    """Raised when a response answer violates a field's config constraints."""
+from typeforms_domain.core.exception.typeforms_domain_exceptions import (
+    FieldConfigValidationError,
+)
 
 
 class FieldType(StrEnum):

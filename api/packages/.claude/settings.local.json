@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/nblok/Documents/Development/github_projects/greenspace-typeforms/api/**)",
+      "Bash(uv run *)"
+    ]
+  }
+}

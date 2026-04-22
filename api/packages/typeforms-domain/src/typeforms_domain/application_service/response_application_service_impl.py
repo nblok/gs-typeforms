@@ -18,18 +18,14 @@ from typeforms_domain.core.valueobject.field_definition import (
 )
 from typeforms_domain.core.valueobject.form_id import FormId
 from typeforms_domain.core.valueobject.respondent_id import RespondentId
+from typeforms_domain.core.exception.typeforms_domain_exceptions import (
+    ResponseNotFoundError,
+    FormNotFoundError,
+)
 
 T = t.TypeVar("T", bound=AbstractUnitOfWork)
 
 logger = logging.getLogger(__name__)
-
-
-class ResponseNotFoundError(Exception):
-    pass
-
-
-class FormNotFoundError(Exception):
-    pass
 
 
 def _response_to_dto(response: Response) -> ResponseDto:
@@ -79,7 +75,8 @@ class ResponseApplicationServiceImpl(ResponseApplicationService):
 
             await self._uow.responses.save(response)
             saved = await self._uow.responses.get_by_respondent(form_id, respondent_id)
-        assert saved is not None
+        if saved is None:
+            raise ResponseNotFoundError("Response not found, submit failed")
         return _response_to_dto(saved)
 
     async def list_responses_for_form(

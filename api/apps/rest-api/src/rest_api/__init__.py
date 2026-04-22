@@ -47,9 +47,5 @@ def create_app() -> FastAPI:
 
 def main() -> None:
     uvicorn.run(
-        "rest_api:create_app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-        factory=True
+        "rest_api:create_app", host="0.0.0.0", port=8000, reload=True, factory=True
     )

@@ -14,6 +14,7 @@ from typeforms_domain.application_service.dto.form_dtos import (
 from typeforms_domain.application_service.ports.input.service.form_application_serivce import (
     FormApplicationService,
 )
+from typeforms_domain.core.exception.typeforms_domain_exceptions import FormValidationError
 from typeforms_domain.core.valueobject.form_id import FormId
 
 router = APIRouter(
@@ -44,9 +45,12 @@ async def create_form(
         Depends(Provide[Container.form_application_service]),
     ],
 ):
-    form_id = await form_application_service.create_form(
-        create_form_command=create_form_command
-    )
+    try:
+        form_id = await form_application_service.create_form(
+            create_form_command=create_form_command
+        )
+    except FormValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     return {"id": str(form_id.value)}
 
 

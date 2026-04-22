@@ -14,9 +14,8 @@ class Entity(t.Generic[TId]):
     def __eq__(self, other: object) -> bool:
         if type(self) is not type(other):
             return False
-        # TODO: remove assert? I would think that throwing exception
-        #       may make more sense in production code
-        assert isinstance(other, Entity)
+        if not isinstance(other, Entity):
+            raise ValueError("Cannot compare entities of different types")
         return self._id == other._id
 
     def __hash__(self) -> int:
