@@ -110,7 +110,7 @@ From the `api/` directory, install all workspace packages and dev dependencies:
 
 ```bash
 cd api
-uv sync
+uv sync --all-packages
 ```
 
 #### 4. Run the dev server
